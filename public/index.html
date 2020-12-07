@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SmolURL</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div style="text-align: center">
+    <h1>SmolURL, the quick and simple URL shortener</h1>
+
+    <div class="btn-group w-75">
+        <input class="form-control" type="text" id="URL" placeholder="insert your long URL here...">
+        <button class="btn btn-primary" onclick="shorten()">shorten</button>
+    </div>
+
+    <br>
+    <a id="aliased" target="_blank"></a>
+</div>
+
+<script>
+    let URL, aliasedText;
+
+    window.onload = ()=> {
+        URL = document.getElementById('URL');
+        aliasedText = document.getElementById('aliased');
+    }
+
+    async function shorten() {
+        const response = await fetch('/api/v1', {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                URL: URL.value
+            })
+        })
+
+        const shortened = location.host + "/@" + await response.text();
+        aliasedText.href = shortened;
+        aliasedText.innerText = shortened;
+    }
+</script>
+</body>
+</html>
